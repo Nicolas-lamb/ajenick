@@ -13,10 +13,12 @@ public class Player_input : MonoBehaviour
     public TMP_Text coinsText;
     public GameObject painel;
     private Rigidbody2D rbplayer;
+    public GameObject light;
     public float speed = 6;
     public static int coinsCont;
     public static int contPerguntas = 10;
     float beSpeed;
+
 
     public Animator anim;
     Vector2 lookdirection = new Vector2(1, 0);
@@ -105,6 +107,7 @@ public class Player_input : MonoBehaviour
     {
         if (other.CompareTag("coins"))
         {
+            light.SetActive(false);
             painel.SetActive(true);
             Destroy(other.gameObject);
             beSpeed = speed;

@@ -17,6 +17,7 @@ public class pegarCoin : MonoBehaviour
     public TMP_Text coinsText;
     public SpawnManager spawnManager;
     [SerializeField] private Button VoltarHome;
+    public GameObject light;
 
     int value;
     bool cricou;
@@ -46,6 +47,7 @@ public class pegarCoin : MonoBehaviour
     void Update()
     {
         value = Player_input.coinsCont;
+        
     }
 
     IEnumerator GetQuestionsFromAPI()
@@ -108,6 +110,7 @@ public class pegarCoin : MonoBehaviour
         if (res)
         {
             Debug.Log("Resposta correta!");
+            light.SetActive(true);
             Player_input.coinsCont += 1;
             coinsText.text = "X" + Player_input.coinsCont;
             indicePerguntaAtual++;
