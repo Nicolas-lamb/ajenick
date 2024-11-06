@@ -52,7 +52,7 @@ public class pegarCoin : MonoBehaviour
 
     IEnumerator GetQuestionsFromAPI()
     {
-        string url = "http://127.0.0.1:5000/get_questions?id_jogo=" + PlayerPrefs.GetString("id_jogo");
+        string url = "http://127.0.0.1:6000/get_questions?id_jogo=" + PlayerPrefs.GetString("id_jogo");
         UnityWebRequest request = UnityWebRequest.Get(url);
         yield return request.SendWebRequest();
 

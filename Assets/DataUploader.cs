@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class DataUploader : MonoBehaviour
 {
-    private string baseUrl = "http://127.0.0.1:5000"; // URL base da API Flask
+    private string baseUrl = "http://127.0.0.1:6000"; // URL base da API Flask
 
     public IEnumerator EnviarDadosParaAPI(string titulo, string descricao, List<PerguntaManager.Pergunta> perguntas, System.Action callback)
     {
