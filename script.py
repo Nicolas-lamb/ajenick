@@ -1,16 +1,20 @@
 from flask import Flask, jsonify, request
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+load_dotenv()
+
 # Configurações do banco de dados PostgreSQL
 db_config = {
-    'dbname': 'ajenick',
-    'user': 'postgres',
-    'password': 'GxDdnPUY8xnUKzO0',
-    'host': 'separately-worthy-boarfish.data-1.use1.tembo.io',
-    'port': '5432',  # Porta padrão do PostgreSQL
+    'dbname': os.getenv('DB_NAME'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'host': os.getenv('DB_HOST'),
+    'port': os.getenv('DB_PORT'),
 }
 
 # Função para conectar ao banco PostgreSQL
