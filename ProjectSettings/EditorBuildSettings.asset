@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Scenes/home.unity
     guid: 179c47059c4bfbe4c914fce117eb2039
+  - enabled: 1
+    path: Assets/Game/Scenes/labirinto.unity
+    guid: 3fc8acdd13e6c734bafef6554d6fdbcd
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,
       guid: d337c01b96c25a543a1b559f2e25fa75, type: 2}

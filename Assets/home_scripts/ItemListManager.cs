@@ -49,7 +49,7 @@ public class ItemListManager : MonoBehaviour
 
     IEnumerator GetJogosFromServer()
     {
-        UnityWebRequest www = UnityWebRequest.Get("http://localhost:6000/get_items");
+        UnityWebRequest www = UnityWebRequest.Get("https://api-ajenick.onrender.com/get_items");
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)

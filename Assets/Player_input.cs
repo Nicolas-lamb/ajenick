@@ -8,7 +8,7 @@ using Unity.VisualScripting; //imagem
 
 public class Player_input : MonoBehaviour
 {
-
+    public FixedJoystick joystick;
     public GameObject painelVencer;
     public TMP_Text coinsText;
     public GameObject painel;
@@ -63,8 +63,10 @@ public class Player_input : MonoBehaviour
 
     void MovePlayer()
     {
-        float verticalMoviment = Input.GetAxis("Vertical");
-        float horizontalMoviment = Input.GetAxis("Horizontal");
+        //float verticalMoviment = Input.GetAxis("Vertical");
+        // float horizontalMoviment = Input.GetAxis("Horizontal");
+        float verticalMoviment = joystick.Vertical;
+        float horizontalMoviment = joystick.Horizontal;
 
         Vector2 direction = new Vector2(horizontalMoviment, verticalMoviment);
 
