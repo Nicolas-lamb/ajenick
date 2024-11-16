@@ -5,12 +5,14 @@ using TMPro; // texto
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using System.Threading;
 
 public class pegarCoin : MonoBehaviour
 {
     public GameObject painelVencer;
     [SerializeField] private Button[] Button;
     public GameObject otherObject;
+    public GameObject canva_joystick;
     public TMP_Text questao;
     public GameObject painel;
     public TMP_Text[] textButtons;
@@ -18,6 +20,8 @@ public class pegarCoin : MonoBehaviour
     public SpawnManager spawnManager;
     [SerializeField] private Button VoltarHome;
     public GameObject light;
+    public float countdownTime = 10f;
+    public TMP_Text time;
 
     int value;
     bool cricou;
@@ -105,12 +109,13 @@ public class pegarCoin : MonoBehaviour
 
     private void OnButtonClick(int index)
     {
+
         Pergunta perguntaAtual = perguntas[indicePerguntaAtual];
         bool res = (index == perguntaAtual.resposta);
         if (res)
         {
             Debug.Log("Resposta correta!");
-            light.SetActive(true);
+            StartCoroutine(DesativarLuzTemporariamente());
             Player_input.coinsCont += 1;
             coinsText.text = "X" + Player_input.coinsCont;
             indicePerguntaAtual++;
@@ -130,6 +135,30 @@ public class pegarCoin : MonoBehaviour
 
             errou++;
         }
+        canva_joystick.SetActive(true);
+    }
+    IEnumerator DesativarLuzTemporariamente()
+    {
+        // Desativa a luz
+        light.SetActive(false);
+
+        // Contagem regressiva de 10 segundos
+        float timeLeft = countdownTime;
+        while (timeLeft > 0)
+        {
+            // Atualiza o texto com o tempo restante formatado
+            time.text = "Luz retornando em: " + timeLeft.ToString("F1") + " segundos";
+
+            // Espera 0.1 segundo antes de atualizar novamente
+            yield return new WaitForSeconds(1f);
+
+            // Reduz o tempo restante
+            timeLeft -= 1f;
+        }
+
+        // Limpa o texto e reativa a luz
+        time.text = "";
+        light.SetActive(true);
     }
 
     [System.Serializable]

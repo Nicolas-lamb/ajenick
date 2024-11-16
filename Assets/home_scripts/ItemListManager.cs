@@ -17,6 +17,8 @@ public class ItemListManager : MonoBehaviour
     public Button perfil;
     public GameObject painel;
 
+    private int id_usuario;
+
     [System.Serializable]
     public class Item
     {
@@ -34,6 +36,12 @@ public class ItemListManager : MonoBehaviour
 
     void Start()
     {
+
+        Screen.orientation = ScreenOrientation.Portrait;
+
+        id_usuario = PlayerPrefs.GetInt("id_usuario");
+        Debug.Log(id_usuario);
+
         StartCoroutine(GetJogosFromServer());
 
         // Adiciona um listener ao botão "criar" para ativar o painel

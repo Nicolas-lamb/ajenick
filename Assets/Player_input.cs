@@ -4,7 +4,8 @@ using UnityEditor;
 using UnityEngine;
 using TMPro; //texto
 using UnityEngine.UI;
-using Unity.VisualScripting; //imagem
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement; //imagem
 
 public class Player_input : MonoBehaviour
 {
@@ -14,9 +15,10 @@ public class Player_input : MonoBehaviour
     public GameObject painel;
     private Rigidbody2D rbplayer;
     public GameObject light;
+    public GameObject canva_joystick;
     public float speed = 6;
     public static int coinsCont;
-    public static int contPerguntas = 10;
+    public static int contPerguntas = 15;
     float beSpeed;
 
 
@@ -28,6 +30,10 @@ public class Player_input : MonoBehaviour
     {
 
         Screen.autorotateToLandscapeLeft = true;
+        Screen.autorotateToLandscapeRight = true;
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+        
+        coinsCont = 0;
       
         
         
@@ -47,10 +53,18 @@ public class Player_input : MonoBehaviour
     void Update()
     {
 
+        // Verifica se o botão de "voltar" foi pressionado
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Carrega a cena especificada
+            SceneManager.LoadScene("home");
+        }
+
         if (painelVencer.activeSelf)
         {
             rbplayer.velocity = Vector2.zero;
             return; // Retorna para não executar o resto do código
+            
         }
 
         if (!painel.activeSelf && speed == 0)
@@ -109,11 +123,13 @@ public class Player_input : MonoBehaviour
     {
         if (other.CompareTag("coins"))
         {
-            light.SetActive(false);
+            //light.SetActive(false);
             painel.SetActive(true);
             Destroy(other.gameObject);
             beSpeed = speed;
             speed = 0;
+            canva_joystick.SetActive(false);
+ 
         }
     }
 }
