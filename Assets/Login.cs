@@ -2,16 +2,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-using TMPro;
 using UnityEngine.SceneManagement;
-using static Registro;
+using TMPro;
 
 public class Login: MonoBehaviour
 {
     public TMP_InputField emailInput; // Campo para o email
     public TMP_InputField senhaInput; // Campo para a senha
     public Button loginButton; // Botão de login
-    public string apiUrl = "http://localhost:6000/login"; // URL da sua API Flask
+    private string apiUrl = "https://api-ajenick.onrender.com/login"; // URL da sua API Flask
     public string proximaCena = "home"; // Nome da cena para onde irá após o login
     public TMP_Text errorMessageText;
     public GameObject errorPanel;
@@ -28,10 +27,7 @@ public class Login: MonoBehaviour
         loginButton.onClick.AddListener(() => RealizarLogin());
         fecharButton.onClick.AddListener(() => fecharErro());
 
-       // if (PlayerPrefs.HasKey("id_usuario"))
-        //{
-        //    SceneManager.LoadScene(proximaCena);
-        //}
+      
     }
 
     public void RealizarLogin()
@@ -58,10 +54,10 @@ public class Login: MonoBehaviour
         UnityWebRequest request = new UnityWebRequest(apiUrl, "POST");
         byte[] jsonToSend = System.Text.Encoding.UTF8.GetBytes(jsonData);
         request.uploadHandler = new UploadHandlerRaw(jsonToSend);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
 
-            yield return request.SendWebRequest();
+        yield return request.SendWebRequest();
 
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -75,6 +71,10 @@ public class Login: MonoBehaviour
                 else if (request.responseCode == 404)
                 {
                     ShowError("Usuário não encontrado.");
+                }
+                else if(request.responseCode == 500)
+                {
+                    ShowError("Erro do servidor");
                 }
                 else
                 {

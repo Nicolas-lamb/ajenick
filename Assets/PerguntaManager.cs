@@ -27,13 +27,15 @@ public class PerguntaManager : MonoBehaviour
 
     public string titulo;
     public string descricao;
+    public string materia;
 
     void Start()
     {
 
         titulo = painelScript.titulo;
         descricao = painelScript.descricao;
-        Debug.Log(titulo);
+        materia = painelScript.textoSelecionado;
+        Debug.Log(materia);
 
         if (adicionarPergunta != null)
         {
@@ -153,7 +155,7 @@ public class PerguntaManager : MonoBehaviour
                 StartCoroutine(dataUploader.EnviarDadosParaAPI(titulo, descricao, perguntas, () =>
                 {
                     SceneManager.LoadScene("home");
-                }));
+                }, materia));
 
             }
             else

@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class manegerLoginregistrar : MonoBehaviour  
 {
@@ -17,6 +18,11 @@ public class manegerLoginregistrar : MonoBehaviour
     {
         registroButton.onClick.AddListener(() => abrirRegistro());
         loginButton.onClick.AddListener(() => abrirLogin());
+
+         //if (PlayerPrefs.HasKey("id_usuario"))
+       // {
+         //   SceneManager.LoadScene("home");
+        //}
     }
 
     public void abrirLogin()

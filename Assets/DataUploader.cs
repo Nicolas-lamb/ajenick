@@ -7,10 +7,11 @@ public class DataUploader : MonoBehaviour
 {
     private string baseUrl = "https://api-ajenick.onrender.com"; // URL base da API Flask
 
-    public IEnumerator EnviarDadosParaAPI(string titulo, string descricao, List<PerguntaManager.Pergunta> perguntas, System.Action callback)
+    public IEnumerator EnviarDadosParaAPI(string titulo, string descricao, List<PerguntaManager.Pergunta> perguntas, System.Action callback, string materia)
     {
         // Adicionar o jogo
-        var jogoInfo = new JogoInfo(titulo, descricao);
+        int id_usuario = PlayerPrefs.GetInt("id_usuario");
+        var jogoInfo = new JogoInfo(titulo, descricao, materia, id_usuario);
         string jogoInfoJson = JsonUtility.ToJson(jogoInfo);
         Debug.Log(jogoInfoJson);
 
@@ -70,11 +71,15 @@ public class DataUploader : MonoBehaviour
     {
         public string Titulo;
         public string Descricao;
+        public string Materia;
+        public int Usuario;
 
-        public JogoInfo(string titulo, string descricao)
+        public JogoInfo(string titulo, string descricao, string materia, int usuario)
         {
             this.Titulo = titulo;
             this.Descricao = descricao;
+            this.Materia = materia;
+            this.Usuario = usuario;
         }
     }
 

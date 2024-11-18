@@ -6,18 +6,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+
 public class ItemListManager : MonoBehaviour
 {
     public GameObject itemPrefab;
     public Transform contentPanel;
-    public float itemSpacing = 10f;
 
     public Button home;
     public Button criar;
     public Button perfil;
     public GameObject painel;
+    float alturaTotal;
+    private float tamanhoInicial = 20f; // Tamanho inicial do contentPanel
+    private float spacing = 40f; // Espaçamento entre perguntas
+
+    public pesquisaManager pesquisaManager;
 
     private int id_usuario;
+
 
     [System.Serializable]
     public class Item
@@ -25,6 +31,8 @@ public class ItemListManager : MonoBehaviour
         public string id_jogo;
         public string nome;  // O campo 'nome' no banco de dados
         public string descricao;
+        public string id_usuario;
+        public string materia;
         public Sprite imagem;
     }
 
@@ -36,16 +44,18 @@ public class ItemListManager : MonoBehaviour
 
     void Start()
     {
-
+       
         Screen.orientation = ScreenOrientation.Portrait;
 
         id_usuario = PlayerPrefs.GetInt("id_usuario");
         Debug.Log(id_usuario);
 
+        // Inicia a chamada para pegar os itens do servidor
         StartCoroutine(GetJogosFromServer());
 
         // Adiciona um listener ao botão "criar" para ativar o painel
         criar.onClick.AddListener(AtivarPainel);
+
     }
 
     void AtivarPainel()
@@ -54,10 +64,28 @@ public class ItemListManager : MonoBehaviour
     }
 
 
-
-    IEnumerator GetJogosFromServer()
+    public IEnumerator GetJogosFromServer()
     {
-        UnityWebRequest www = UnityWebRequest.Get("https://api-ajenick.onrender.com/get_items");
+        string url = "https://api-ajenick.onrender.com/get_items";
+
+        string palavraChave = pesquisaManager.palavra;
+        
+        string materia = pesquisaManager.materia;
+        
+
+        if (!string.IsNullOrEmpty(palavraChave) || !string.IsNullOrEmpty(materia))
+        {
+            List<string> queryParams = new List<string>();
+
+            if (!string.IsNullOrEmpty(palavraChave))
+                queryParams.Add("nome=" + UnityWebRequest.EscapeURL(palavraChave));
+
+            if (!string.IsNullOrEmpty(materia))
+                queryParams.Add("materia=" + UnityWebRequest.EscapeURL(materia));
+
+            url += "?" + string.Join("&", queryParams);
+        }
+        UnityWebRequest www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
@@ -69,11 +97,19 @@ public class ItemListManager : MonoBehaviour
             // Recebe o JSON e deserializa para o objeto ItemList
             ItemList itemList = JsonUtility.FromJson<ItemList>("{\"items\":" + www.downloadHandler.text + "}");
             PopulateList(itemList.items);
+
+            // Ajusta o tamanho do contentPanel após carregar os itens
+            AjustarTamanhoContentPanelDinamicamente(itemList.items);
         }
     }
 
     void PopulateList(List<Item> itens)
     {
+
+        foreach (Transform child in contentPanel)
+        {
+            Destroy(child.gameObject);
+        }
         foreach (Item item in itens)
         {
             GameObject newItem = Instantiate(itemPrefab, contentPanel);
@@ -93,7 +129,7 @@ public class ItemListManager : MonoBehaviour
             Image itemImage = newItem.transform.Find("ItemImage").GetComponent<Image>();
             if (itemImage != null)
             {
-                //itemImage.sprite = item.imagem;
+                itemImage.sprite = item.imagem;
             }
 
             Button button = newItem.GetComponent<Button>();
@@ -102,14 +138,25 @@ public class ItemListManager : MonoBehaviour
                 button.onClick.AddListener(() => OnItemClick(item.id_jogo));
             }
         }
-
-        RectTransform contentRect = contentPanel.GetComponent<RectTransform>();
-        contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, (itemPrefab.GetComponent<RectTransform>().sizeDelta.y + itemSpacing) * itens.Count + 60);
     }
 
     void OnItemClick(string id_jogo)
     {
         PlayerPrefs.SetString("id_jogo", id_jogo);
         SceneManager.LoadScene("labirinto");
+    }
+
+    void AjustarTamanhoContentPanelDinamicamente(List<Item> items)
+    {
+        RectTransform contentRect = contentPanel.GetComponent<RectTransform>();
+        if (contentRect == null)
+        {
+            Debug.LogError("O 'contentPanel' não tem um componente 'RectTransform'.");
+            return;
+        }
+
+        alturaTotal = tamanhoInicial + (212 + spacing) * items.Count;
+        contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, alturaTotal);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
     }
 }

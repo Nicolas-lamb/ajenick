@@ -12,7 +12,7 @@ public class Registro : MonoBehaviour
     public TMP_InputField senhaInput;
     public Button enviarButton;
 
-    private string apiUrl = "http://localhost:6000/register"; // URL da sua API Flask
+    private string apiUrl = "https://api-ajenick.onrender.com/register"; // URL da sua API Flask
     public string proximaCena = "home"; // Nome da cena para qual você quer ir
 
     [System.Serializable]

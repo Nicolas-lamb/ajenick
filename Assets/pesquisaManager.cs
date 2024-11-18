@@ -1,52 +1,61 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class PainelScript : MonoBehaviour
+public class pesquisaManager : MonoBehaviour
 {
-    public TMP_InputField tituloInput; // Arraste o InputField Título aqui
-    public TMP_InputField descricaoInput; // Arraste o InputField Descrição aqui
-    public Button proximoButton;// Arraste o botão Próximo aqui
-    public GameObject panelCriarPerguntas;
-    public GameObject informacoesPanel;
+
+    public TMP_InputField palavraInput; // Arraste o InputField
+    public Button pesquisar;// Arraste o botão Próximo aqui
+    public GameObject scrollView;
+    public GameObject containerToggles;
     public ToggleGroup toggleGroup;
     public string textoSelecionado;
 
-    public string titulo { get; private set; } // Tornar público com apenas getter
-    public string descricao { get; private set; } // Tornar público com apenas getter
+    public ItemListManager itemListManager;
 
+
+
+    public string palavra;
+    public string materia;
+    // Start is called before the first frame update
     void Start()
     {
-   
-        proximoButton.onClick.AddListener(OnProximoClicked);
-     
-
+        pesquisar.onClick.AddListener(OnPesquisarClicked);
+        palavraInput.onSelect.AddListener (OnAbrirMateriasClicked);
     }
 
-    void OnProximoClicked()
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    void OnAbrirMateriasClicked(string inputText)
+    {
+        containerToggles.SetActive(true);
+        scrollView.SetActive(false);
+    }
+
+    void OnPesquisarClicked()
     {
 
         ConfirmarSelecao();
         // Obtém o texto dos inputs
-        titulo = tituloInput.text;
-         descricao = descricaoInput.text;
+        palavra = palavraInput.text;
+        materia = textoSelecionado;
+ 
 
         // Verifica se o título e a descrição não estão vazios
-        if (!string.IsNullOrWhiteSpace(titulo) && !string.IsNullOrWhiteSpace(descricao))
-        {
+        
             // Se ambos os campos estão preenchidos, fecha o painel de informações e abre o painel de criar perguntas
-            informacoesPanel.SetActive(false);
-            panelCriarPerguntas.SetActive(true);
-        }
-        else
-        {
-            // Se qualquer um dos campos estiver vazio, exibe uma mensagem de erro ou aviso
-            Debug.LogWarning("Título e descrição devem ser preenchidos antes de avançar.");
-            // Opcional: Adicione um feedback visual ao usuário, como um texto de erro na interface
-        }
+            containerToggles.SetActive(false);
+            scrollView.SetActive(true);
+
+        StartCoroutine(itemListManager.GetJogosFromServer());
+
     }
     public void ConfirmarSelecao()
     {
@@ -73,8 +82,4 @@ public class PainelScript : MonoBehaviour
         // Se nenhum Toggle estiver ativo
         Debug.LogWarning("Nenhum Toggle foi selecionado.");
     }
-
-
-
-
 }
